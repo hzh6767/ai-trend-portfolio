@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pii-redactor"
+version = "0.1.0"
+description = "Offline explainable redaction for LLM prompts and traces"
+requires-python = ">=3.10"
+
+[project.scripts]
+pii-redactor = "pii_redactor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        project:
+          - rag-eval-kit
+          - prompt-injection-firewall
+          - llm-router-lab
+          - structured-output-guard
+          - ai-cost-observer
+          - agent-trace-analyzer
+          - pii-redactor
+          - 07-semantic-cache-sim
+          - 08-model-drift-monitor
+          - 09-tool-contract-checker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ matrix.project }}" in
+            07-semantic-cache-sim) package=semantic_cache_sim ;;
+            08-model-drift-monitor) package=model_drift_monitor ;;
+            09-tool-contract-checker) package=tool_contract_checker ;;
+            structured-output-guard) package=structured_output_guard ;;
+            ai-cost-observer) package=ai_cost_observer ;;
+            agent-trace-analyzer) package=agent_trace_analyzer ;;
+            pii-redactor) package=pii_redactor ;;
+            prompt-injection-firewall) package=prompt_injection_firewall ;;
+            rag-eval-kit) package=rag_eval_kit ;;
+            llm-router-lab) package=llm_router_lab ;;
+          esac
+          PYTHONPATH="${{ matrix.project }}/src" python -m unittest discover -s "${{ matrix.project }}/tests" -v
+          python -m compileall -q "${{ matrix.project }}/src" "${{ matrix.project }}/tests"

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "model-drift-monitor"
+version = "0.1.0"
+description = "Offline distribution drift monitor for model features"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+model-drift-monitor = "model_drift_monitor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

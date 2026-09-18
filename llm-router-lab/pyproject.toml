@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-router-lab"
+version = "0.1.0"
+description = "Deterministic offline LLM endpoint router"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+llm-route = "llm_router_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
