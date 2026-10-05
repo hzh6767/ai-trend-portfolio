@@ -7,6 +7,7 @@ name = "structured-output-guard"
 version = "0.1.0"
 description = "Deterministic schema validation for LLM JSON output"
 requires-python = ">=3.10"
+dependencies = []
 
 [project.scripts]
 structured-output-guard = "structured_output_guard.cli:main"

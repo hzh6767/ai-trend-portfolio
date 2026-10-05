@@ -7,6 +7,7 @@ name = "agent-trace-analyzer"
 version = "0.1.0"
 description = "Offline observability reports for LLM agent traces"
 requires-python = ">=3.10"
+dependencies = []
 
 [project.scripts]
 agent-trace-analyzer = "agent_trace_analyzer.cli:main"

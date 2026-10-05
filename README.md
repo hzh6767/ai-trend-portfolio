@@ -24,7 +24,7 @@ Every project is self-contained, uses the Python standard library at runtime, ha
 From this repository root:
 
 ```powershell
-.un_all_checks.ps1 -Python python
+./run_all_checks.ps1 -Python python
 ```
 
 On this workstation the verified interpreter is `E:\anaconda3\python.exe`:

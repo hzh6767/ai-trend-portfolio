@@ -7,6 +7,7 @@ name = "ai-cost-observer"
 version = "0.1.0"
 description = "Offline token and budget analysis for LLM logs"
 requires-python = ">=3.10"
+dependencies = []
 
 [project.scripts]
 ai-cost-observer = "ai_cost_observer.cli:main"
