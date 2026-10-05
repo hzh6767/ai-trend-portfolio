@@ -35,6 +35,10 @@ class ToolContractTests(unittest.TestCase):
         errors = validate_contract(bad)
         self.assertGreaterEqual(len(errors), 3)
 
+    def test_real_nul_byte_is_flagged_as_shell_metacharacter(self):
+        result = check_invocation(CONTRACT, {"path": "a\x00b"})
+        self.assertTrue(any("shell metacharacters" in warning for warning in result.warnings))
+
 
 if __name__ == "__main__":
     unittest.main()

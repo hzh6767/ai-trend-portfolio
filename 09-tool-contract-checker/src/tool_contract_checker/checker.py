@@ -7,7 +7,7 @@ import re
 from typing import Any, Mapping
 
 _TYPES = {"string", "integer", "number", "boolean", "array", "object"}
-_SHELL_RE = re.compile(r"(?:&&|\|\||[;&|`]|\\x00|\$\(|\n)")
+_SHELL_RE = re.compile(r"(?:&&|\|\||[;&|`]|\\x00|\x00|\$\(|\n)")
 
 
 @dataclass(frozen=True)

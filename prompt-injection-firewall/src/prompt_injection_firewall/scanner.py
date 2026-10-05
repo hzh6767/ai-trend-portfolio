@@ -96,7 +96,7 @@ def _rule(
     explanation: str,
     remediation: str,
 ) -> Rule:
-    return Rule(rule_id, category, severity, re.compile(expression, re.IGNORECASE), explanation, remediation)
+    return Rule(rule_id, category, severity, re.compile(expression, re.IGNORECASE | re.DOTALL), explanation, remediation)
 
 
 DEFAULT_RULES: tuple[Rule, ...] = (

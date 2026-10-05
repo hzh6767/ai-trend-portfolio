@@ -20,6 +20,11 @@ class DriftMonitorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             monitor({"x": []}, {"x": [1]})
 
+    def test_constant_baseline_with_shifted_current_is_drift(self):
+        report = monitor({"x": [5.0, 5.0, 5.0, 5.0]}, {"x": [100.0, 100.0, 100.0, 100.0]}, thresholds={"x": 0.1})
+        self.assertEqual(report.drifted, ("x",))
+        self.assertEqual(monitor({"x": [5.0, 5.0]}, {"x": [5.0, 5.0]}, thresholds={"x": 0.1}).drifted, ())
+
 
 if __name__ == "__main__":
     unittest.main()

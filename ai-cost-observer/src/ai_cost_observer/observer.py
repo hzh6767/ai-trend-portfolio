@@ -18,6 +18,13 @@ def estimate_tokens(text: str) -> int:
     return max(1, (len(text) + 3) // 4)
 
 
+def _token_count(value: object, fallback_text: str) -> int:
+    """Use an explicit token count when provided, otherwise estimate from text."""
+    if value is None:
+        return estimate_tokens(fallback_text)
+    return int(value)
+
+
 def _price(model: str, prices: dict[str, tuple[float, float]]) -> tuple[float, float]:
     if model not in prices:
         raise ValueError(f"unknown model price: {model}")
@@ -30,11 +37,11 @@ def summarize(records: Iterable[dict], *, budget: float | None = None, prices: d
     calls = 0
     by_model: dict[str, dict[str, float | int]] = defaultdict(lambda: {"calls": 0, "tokens": 0, "cost": 0.0})
     for record in records:
-        model = str(record.get("model", ""))
-        prompt = str(record.get("prompt", ""))
-        completion = str(record.get("completion", ""))
-        input_tokens = int(record.get("input_tokens", estimate_tokens(prompt)))
-        output_tokens = int(record.get("output_tokens", estimate_tokens(completion)))
+        model = str(record.get("model") or "")
+        prompt = str(record.get("prompt") or "")
+        completion = str(record.get("completion") or "")
+        input_tokens = _token_count(record.get("input_tokens"), prompt)
+        output_tokens = _token_count(record.get("output_tokens"), completion)
         if input_tokens < 0 or output_tokens < 0:
             raise ValueError("token counts must be non-negative")
         in_rate, out_rate = _price(model, table)

@@ -16,7 +16,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         records = [json.loads(line) for line in args.input.read_text(encoding="utf-8").splitlines() if line.strip()]
         result = summarize(records, budget=args.budget)
-    except (OSError, json.JSONDecodeError, ValueError) as exc:
+    except (OSError, json.JSONDecodeError, ValueError, TypeError) as exc:
         print(json.dumps({"error": str(exc)}))
         return 2
     print(json.dumps(result, indent=2, sort_keys=True))

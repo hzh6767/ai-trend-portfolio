@@ -69,6 +69,11 @@ def _psi(baseline: Sequence[int], current: Sequence[int]) -> float:
 def _numeric_metric(feature: str, baseline: Sequence[float], current: Sequence[float], threshold: float, bins: int) -> DriftMetric:
     low, high = min(baseline), max(baseline)
     if low == high:
+        # A constant baseline collapses to one bin; widen the range with the
+        # current window so a shifted population can still register as drift.
+        low = min(low, min(current))
+        high = max(high, max(current))
+    if low == high:
         edges = [low - 0.5, high + 0.5]
     else:
         width = (high - low) / bins

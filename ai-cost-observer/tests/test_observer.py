@@ -17,6 +17,13 @@ class ObserverTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown model"):
             summarize([{"model": "unknown", "prompt": "x"}])
 
+    def test_null_token_fields_fall_back_to_estimate(self):
+        result = summarize([
+            {"model": "gpt-4o-mini", "prompt": "abcd", "completion": "abcd", "input_tokens": None, "output_tokens": None}
+        ])
+        self.assertEqual(result["calls"], 1)
+        self.assertGreater(result["by_model"]["gpt-4o-mini"]["tokens"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
