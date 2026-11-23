@@ -15,6 +15,14 @@ class GuardTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "missing required"):
             validate({}, SCHEMA)
 
+    def test_duplicate_keys_are_rejected_before_validation(self):
+        for response in ('{"a":0,"a":1}', '```json\n[{"a":0,"\\u0061":1}]\n```'):
+            with self.subTest(response=response), self.assertRaisesRegex(ValidationError, "duplicate JSON key"):
+                extract_json(response)
+
+    def test_distinct_objects_can_reuse_a_key(self):
+        self.assertEqual(extract_json('[{"a":0},{"a":1}]'), [{"a": 0}, {"a": 1}])
+
     def test_extra_fields_are_rejected(self):
         with self.assertRaisesRegex(ValidationError, "unexpected"):
             validate({"answer": "ok", "secret": "x"}, SCHEMA)
