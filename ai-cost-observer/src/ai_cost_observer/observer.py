@@ -22,7 +22,13 @@ def _token_count(value: object, fallback_text: str) -> int:
     """Use an explicit token count when provided, otherwise estimate from text."""
     if value is None:
         return estimate_tokens(fallback_text)
-    return int(value)
+    if isinstance(value, int) and not isinstance(value, bool):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        return int(value)
+    raise ValueError("token counts must be whole numbers")
 
 
 def _price(model: str, prices: dict[str, tuple[float, float]]) -> tuple[float, float]:
@@ -32,11 +38,13 @@ def _price(model: str, prices: dict[str, tuple[float, float]]) -> tuple[float, f
 
 
 def summarize(records: Iterable[dict], *, budget: float | None = None, prices: dict[str, tuple[float, float]] | None = None) -> dict:
-    table = prices or DEFAULT_PRICES
+    table = DEFAULT_PRICES if prices is None else prices
     total = 0.0
     calls = 0
     by_model: dict[str, dict[str, float | int]] = defaultdict(lambda: {"calls": 0, "tokens": 0, "cost": 0.0})
     for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("each record must be a JSON object")
         model = str(record.get("model") or "")
         prompt = str(record.get("prompt") or "")
         completion = str(record.get("completion") or "")
