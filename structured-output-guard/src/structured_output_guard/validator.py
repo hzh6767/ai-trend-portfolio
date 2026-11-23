@@ -11,6 +11,15 @@ class ValidationError(ValueError):
     """Raised when model output is not safe for the requested schema."""
 
 
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValidationError(f"duplicate JSON key: {key!r}")
+        result[key] = value
+    return result
+
+
 def extract_json(text: str) -> Any:
     """Parse exactly one JSON document, accepting one fenced code block."""
     raw = text.strip()
@@ -18,7 +27,7 @@ def extract_json(text: str) -> Any:
     if fenced:
         raw = fenced.group(1).strip()
     try:
-        value = json.loads(raw)
+        value = json.loads(raw, object_pairs_hook=_unique_object)
     except json.JSONDecodeError as exc:
         raise ValidationError(f"invalid JSON: {exc.msg} at character {exc.pos}") from exc
     return value
